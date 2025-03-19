@@ -1,0 +1,25 @@
+FROM node:20-alpine
+
+ENV CI_COMMIT_SHORT_SHA="DEVELOPMENT__MOCK__CI_COMMIT_SHORT_SHA"
+
+ENV NODE_ENV="development"
+ENV PORT=8200
+
+RUN apk update \
+  && apk add wget
+
+WORKDIR /usr/src/app
+
+COPY package*.json tsconfig.json ./
+
+COPY ./static ./static
+
+ADD . .
+
+RUN npm install
+
+# no need for build (ts-node)
+
+EXPOSE 8200
+
+CMD [ "npm", "run", "start:dev" ]
